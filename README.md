@@ -1,4 +1,4 @@
-# Libcache
+# Libcache [![Gem Version](https://badge.fury.io/rb/libcache.svg)](https://badge.fury.io/rb/libcache)
 
 A caching library that provides in-memory and file based cache
 
