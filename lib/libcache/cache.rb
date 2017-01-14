@@ -17,13 +17,15 @@ class Cache
 
   def put(key, value)
     # removed oldest entry if max_size is approached
-    if @cache.size >= max_size
-      key, value = @time_tracker.values.sort {|v| Time.now - v }.reverse.first
-      invalidate(key)
-      @time_tracker.delete(key)
+    if max_size != nil
+      if @cache.size >= max_size
+        key, value = @time_tracker.values.sort {|v| Time.now - v }.reverse.first
+        invalidate(key)
+        @time_tracker.delete(key)
+      end
+      @time_tracker[key] = Time.now
     end
     @cache[key] = value
-    @time_tracker[key] = Time.now
     @scheduler.in expiry_time, :blocking => true do
       invalidate key
     end
@@ -58,4 +60,5 @@ class Cache
   def invalidateAll
     @cache.clear
   end
+
 end
