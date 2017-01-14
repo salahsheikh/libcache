@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["silk8192"]
   spec.email         = ["silk8192@gmail.com"]
 
-  spec.summary       = "A caching library that provides in-memory and file based cache"
-  spec.description   = "A caching library that provides in-memory and file based cache"
+  spec.summary       = "A caching library that provides an in-memory and file based cache"
+  spec.description   = "A caching library that provides an in-memory and file based cache with various functionality similar to Guava's Caching system. For information on how to use: https://github.com/silk8192/libcache"
   spec.homepage      = "https://github.com/silk8192/libcache"
   spec.license       = "MIT"
 
