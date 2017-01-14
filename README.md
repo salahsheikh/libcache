@@ -20,17 +20,14 @@ Or install it yourself as:
 
 ## Usage
 
-For an in memory Cache with an expiry time of 3 seconds
+For an in memory Cache with an expiry time of 3 seconds, store location at 'foo\bar', and refresh method where 100 is added to the key (of course more sophisticated value retrieving operations will replace this method)
 ```ruby
 
 cache = CacheBuilder.with(Cache).set_expiry('3s').set_refresh(Proc.new { |key| key + 100 }).build
 
 cache.put(1, 5)
-
 cache.get(1) # will return 5
-
 sleep 4 # note that this is more than the expiry time
-
 cache.get(1) # will return 105 as the data has been refreshed
 
 # delete all data on exit of program
@@ -40,7 +37,7 @@ end
 
 ```
 
-For an file-based Cache with an expiry time of 3 seconds and store locationi at 'foo\bar'
+For an file-based Cache with an expiry time of 3 seconds, store location at 'foo\bar', and refresh method where 100 is added to the key (of course more sophisticated value retrieving operations will replace this method)
 ```ruby
 cache = CacheBuilder.with(FileCache).set_store('foo\bar').set_expiry('3s').set_refresh(Proc.new { |key| key + 100 }).build
 
@@ -54,7 +51,6 @@ at_exit do
   cache.invalidateAll
 end
 ```
-
 
 For more on what kind of strings are understood as times, [click here](https://github.com/jmettraux/rufus-scheduler/blob/two/README.rdoc#the-time-strings-understood-by-rufus-scheduler).
 
