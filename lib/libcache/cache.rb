@@ -1,4 +1,5 @@
 require 'rufus-scheduler'
+require 'pp'
 
 class Cache
 
@@ -7,6 +8,7 @@ class Cache
   def initialize
     ENV['TZ'] = 'UTC'
     @scheduler = Rufus::Scheduler.new
+    @time_tracker = Hash.new
   end
 
   def create_store
@@ -14,14 +16,21 @@ class Cache
   end
 
   def put(key, value)
+    # removed oldest entry if max_size is approached
+    if @cache.size >= max_size
+      key, value = @time_tracker.values.sort {|v| Time.now - v }.reverse.first
+      invalidate(key)
+      @time_tracker.delete(key)
+    end
     @cache[key] = value
+    @time_tracker[key] = Time.now
     @scheduler.in expiry_time, :blocking => true do
       invalidate key
     end
   end
 
   def get(key)
-    refresh
+    check_refresh(key)
     return @cache[key]
   end
 
@@ -29,15 +38,8 @@ class Cache
     return @cache.key?(key)
   end
 
-  def invalidate(key)
-    @cache.delete key
-  end
 
-  def invalidateAll
-    @cache.clear
-  end
-
-  def refresh
+  def check_refresh(key)
     if @cache[key] == nil && !has_refresh?
       val = refresh.call(key)
       put(key, val)
@@ -49,4 +51,11 @@ class Cache
     return refresh == nil
   end
 
+  def invalidate(key)
+    @cache.delete key
+  end
+
+  def invalidateAll
+    @cache.clear
+  end
 end

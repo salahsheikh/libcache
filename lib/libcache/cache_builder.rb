@@ -27,6 +27,7 @@ class CacheBuilder
 
   def set_max(max_size)
     @cache.max_size = max_size
+    return self
   end
 
   def build
