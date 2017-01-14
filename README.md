@@ -50,7 +50,7 @@ end
 
 For an file-based Cache with an expiry time of 3 seconds, store location at 'foo\bar', and refresh method where 100 is added to the key (of course more sophisticated value retrieving operations will replace this method). Of course these additions are optional and configurable. The only thing that is non-removable is the ```set_store``` method. 
 ```ruby
-cache = CacheBuilder.with(FileCache).set_store('foo\bar').set_expiry('3s').set_expiry('3s').set_max(500).set_refresh(Proc.new { |key| key + 100 }).build
+cache = CacheBuilder.with(FileCache).set_store('foo\bar').set_expiry('3s').set_max(500).set_refresh(Proc.new { |key| key + 100 }).build
 
 cache.put(1, 5)
 cache.get(1) # will return 5
