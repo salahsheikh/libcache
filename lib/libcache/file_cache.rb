@@ -24,11 +24,7 @@ class FileCache < Cache
   end
 
   def get(key)
-    if @cache[key] == nil
-      val = refresh.call(key)
-      put(key, val)
-      return val
-    end
+    refresh
     return File.read(File.join(store, key.to_s))
   end
 
@@ -39,9 +35,9 @@ class FileCache < Cache
 
   def invalidateAll
     super
-    Dir.foreach(store) { |f|
+    Dir.foreach(store) do |f|
       File.delete(File.join(store, f)) if f != '.' && f != '..'
-    }
+    end
   end
 
 end

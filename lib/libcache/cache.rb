@@ -2,7 +2,7 @@ require 'rufus-scheduler'
 
 class Cache
 
-  attr_accessor :expiry_time, :refresh, :store
+  attr_accessor :expiry_time, :refresh, :store, :max_size
 
   def initialize
     ENV['TZ'] = 'UTC'
@@ -21,10 +21,12 @@ class Cache
   end
 
   def get(key)
-    if @cache[key] == nil
-      return refresh.call key
-    end
+    refresh
     return @cache[key]
+  end
+
+  def exists?(key)
+    return @cache.key?(key)
   end
 
   def invalidate(key)
@@ -33,6 +35,18 @@ class Cache
 
   def invalidateAll
     @cache.clear
+  end
+
+  def refresh
+    if @cache[key] == nil && !has_refresh?
+      val = refresh.call(key)
+      put(key, val)
+      return val
+    end
+  end
+
+  def has_refresh?
+    return refresh == nil
   end
 
 end

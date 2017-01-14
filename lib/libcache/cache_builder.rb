@@ -25,6 +25,10 @@ class CacheBuilder
     return self
   end
 
+  def set_max(max_size)
+    @cache.max_size = max_size
+  end
+
   def build
     @cache.create_store
     return @cache.dup
