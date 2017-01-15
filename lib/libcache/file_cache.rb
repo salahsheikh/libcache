@@ -1,3 +1,5 @@
+require 'digest'
+
 require_relative 'cache'
 
 class FileCache < Cache
@@ -8,14 +10,16 @@ class FileCache < Cache
 
   def create_store
     @cache = Hash.new
+    @keys = Hash.new
     if store == nil
       raise 'Store path is missing!'
     end
   end
 
   def put(key, value)
+    @keys[key] = Digest::MD5.hexdigest(key)
     @cache[key] = value
-    File.open(File.join(store, key.to_s), 'w') do |f|
+    File.open(File.join(store, @keys[key]), 'w') do |f|
       f.write(value)
     end
     @scheduler.in expiry_time, :blocking => true do
@@ -25,12 +29,12 @@ class FileCache < Cache
 
   def get(key)
     refresh
-    return File.read(File.join(store, key.to_s))
+    return File.read(File.join(store, @keys[key]))
   end
 
   def invalidate(key)
     super
-    File.delete(File.join(store, key.to_s))
+    File.delete(File.join(store, @keys[key]))
   end
 
   def invalidateAll
