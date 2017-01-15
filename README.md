@@ -1,6 +1,6 @@
 # Libcache [![Build Status](https://travis-ci.org/silk8192/libcache.svg?branch=master)](https://travis-ci.org/silk8192/libcache) [![Gem Version](https://badge.fury.io/rb/libcache.svg)](https://badge.fury.io/rb/libcache)
 
-A simple caching library that provides flexible and powerful caching features such as in-memory and file based caching similar to Guava's Caching system.
+A simple caching library that provides flexible and powerful caching features such as in-memory and file based caching similar to Guava's Caching system. [Docs.](http://www.rubydoc.info/gems/libcache)
 
 ## Features
 
@@ -9,7 +9,6 @@ A simple caching library that provides flexible and powerful caching features su
 * Limiting the size of the cache through eviction based on a specified max size
 * Allows for expiration behavior based on the time since an object was placed in the cache or when it was last accessed/updated
 * Allows custom refresh functions for reloading expensive data once it has been discarded 
-
 
 
 ## Installation
