@@ -31,8 +31,10 @@ class Cache
       @time_tracker[key] = Time.now
     end
     @cache[key] = value
-    @scheduler.in expiry_time, :blocking => true do
-      invalidate key
+    if @scheduler != nil
+      @scheduler.in expiry_time, :blocking => true do
+        invalidate key
+      end
     end
   end
 
