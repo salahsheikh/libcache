@@ -45,6 +45,7 @@ class FileCache < Cache
   # @param [String] key The key value used to identify an object in the cache
   def invalidate(key)
     super
+    @keys.delete key
     File.delete(File.join(store, @keys[key]))
   end
 
