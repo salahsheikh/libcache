@@ -1,5 +1,4 @@
 require "libcache/version"
-
-module Libcache
-  # Your code goes here...
-end
+require_relative 'libcache/cache'
+require_relative 'libcache/cache_builder'
+require_relative 'libcache/file_cache'
