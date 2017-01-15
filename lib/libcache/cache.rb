@@ -23,7 +23,7 @@ class Cache
   def put(key, value)
     # removed oldest entry if max_size is approached
     if max_size != nil
-      if @cache.size >= max_size
+      if @cache.size >= max_size - 1
         key, value = @time_tracker.values.sort {|v| Time.now - v }.reverse.first
         invalidate(key)
         @time_tracker.delete(key)
@@ -31,7 +31,7 @@ class Cache
       @time_tracker[key] = Time.now
     end
     @cache[key] = value
-    if @scheduler != nil
+    if expiry_time != nil
       @scheduler.in expiry_time, :blocking => true do
         invalidate key
       end
@@ -67,6 +67,10 @@ class Cache
   # @return [Boolean] Checks if the cache has a refresh method
   def has_refresh?
     return refresh == nil
+  end
+
+  def get_size
+    return @cache.size
   end
 
   # Deletes a key-value pair from the cache
