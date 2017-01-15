@@ -1,6 +1,16 @@
 # Libcache [![Build Status](https://travis-ci.org/silk8192/libcache.svg?branch=master)](https://travis-ci.org/silk8192/libcache) [![Gem Version](https://badge.fury.io/rb/libcache.svg)](https://badge.fury.io/rb/libcache)
 
-A caching library that provides in-memory and file based cache
+A simple caching library that provides flexible and powerful caching features such as in-memory and file based caching similar to Guava's Caching system.
+
+## Features
+
+* Supports in-memory cache
+* Supports filesystem based cache
+* Limiting the size of the cache through eviction based on a specified max size
+* Allows for expiration behavior based on the time since an object was placed in the cache or when it was last accessed/updated
+* Allows custom refresh functions for reloading expensive data once it has been discarded 
+
+
 
 ## Installation
 
@@ -40,7 +50,7 @@ end
 
 For an file-based Cache with an expiry time of 3 seconds, store location at 'foo\bar', and refresh method where 100 is added to the key (of course more sophisticated value retrieving operations will replace this method). Of course these additions are optional and configurable. The only thing that is non-removable is the ```set_store``` method. 
 ```ruby
-cache = CacheBuilder.with(FileCache).set_store('foo\bar').set_expiry('3s').set_expiry('3s').set_max(500).set_refresh(Proc.new { |key| key + 100 }).build
+cache = CacheBuilder.with(FileCache).set_store('foo\bar').set_expiry('3s').set_max(500).set_refresh(Proc.new { |key| key + 100 }).build
 
 cache.put(1, 5)
 cache.get(1) # will return 5
