@@ -34,7 +34,7 @@ class FileCache < Cache
     @keys[key] = Digest::MD5.hexdigest(key) + Time.now.to_i.to_s
     @cache[key] = value
     File.open(File.join(store, @keys[key]), 'w') do |f|
-      f.write(value)
+      f.write(Marshal.dump(value))
     end
     @scheduler.in expiry_time, :blocking => true do
       invalidate key
@@ -46,15 +46,15 @@ class FileCache < Cache
   # @return [Object] The object that corresponds with the key
   def get(key)
     refresh
-    return File.read(File.join(store, @keys[key]))
+    return Marshal.load(File.read(File.join(store, @keys[key])))
   end
 
   # Deletes a key-value pair from the cache and store directory
   # @param [String] key The key value used to identify an object in the cache
   def invalidate(key)
     super
-    @keys.delete key
     File.delete(File.join(store, @keys[key]))
+    @keys.delete key
   end
 
   # Clears all items in the cache and the cached files in the store directory
