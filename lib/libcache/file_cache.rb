@@ -17,9 +17,8 @@ class FileCache < Cache
   end
 
   def put(key, value)
-    if ((key =~ /\A[a-zA-Z0-9_-]+\z/) != 0) || !(key.instance_of? String)
-      raise 'Invalid key value used!'
-    end
+    raise InvalidKey unless key.is_a? String
+    raise InvalidKey unless key =~ /\A[a-zA-Z0-9_-]+\z/
     @keys[key] = Digest::MD5.hexdigest(key) + Time.now.to_i.to_s
     @cache[key] = value
     File.open(File.join(store, @keys[key]), 'w') do |f|
