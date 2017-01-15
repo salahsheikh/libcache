@@ -23,6 +23,14 @@ class FileCache < Cache
   def put(key, value)
     raise InvalidKey unless key.is_a? String
     raise InvalidKey unless key =~ /\A[a-zA-Z0-9_-]+\z/
+    if max_size != nil
+      if @cache.size >= max_size - 1
+        key, value = @time_tracker.values.sort {|v| Time.now - v }.reverse.first
+        invalidate(key)
+        @time_tracker.delete(key)
+      end
+      @time_tracker[key] = Time.now
+    end
     @keys[key] = Digest::MD5.hexdigest(key) + Time.now.to_i.to_s
     @cache[key] = value
     File.open(File.join(store, @keys[key]), 'w') do |f|
