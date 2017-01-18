@@ -80,7 +80,7 @@ class Cache
   end
 
   # Clears all items in the cache
-  def invalidateAll
+  def invalidate_all
     @cache.clear
   end
 
