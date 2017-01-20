@@ -23,16 +23,8 @@ class FileCache < Cache
   def put(key, value)
     raise InvalidKey unless key.is_a? String
     raise InvalidKey unless key =~ /\A[a-zA-Z0-9_-]+\z/
-    if max_size != nil
-      if @cache.size >= max_size - 1
-        key, value = @time_tracker.values.sort {|v| Time.now - v }.reverse.first
-        invalidate(key)
-        @time_tracker.delete(key)
-      end
-      @time_tracker[key] = Time.now
-    end
+    check_expiration(key)
     @keys[key] = @keys.size.to_s
-    @cache[key] = value
     File.open(File.join(store, @keys[key]), 'w') do |f|
       f.write(Marshal.dump(value))
     end
@@ -45,7 +37,10 @@ class FileCache < Cache
   # @param [String] key The key value used to identify an object in the cache
   # @return [Object] The object that corresponds with the key
   def get(key)
-    refresh
+    check_refresh(key)
+    if(@keys[key]) == nil
+      return nil
+    end
     return Marshal.load(File.read(File.join(store, @keys[key])))
   end
 

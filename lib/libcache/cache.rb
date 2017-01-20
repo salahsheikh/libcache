@@ -21,6 +21,16 @@ class Cache
   # @param [String] key The key value used to identify an object in the cache
   # @param [Object] value The object to be placed in the cache
   def put(key, value)
+    check_expiration(key)
+    @cache[key] = value
+    if expiry_time != nil
+      @scheduler.in expiry_time, :blocking => true do
+        invalidate key
+      end
+    end
+  end
+
+  private def check_expiration(key)
     # removed oldest entry if max_size is approached
     if max_size != nil
       if @cache.size >= max_size - 1
@@ -30,12 +40,6 @@ class Cache
       end
       @time_tracker[key] = Time.now
     end
-    @cache[key] = value
-    if expiry_time != nil
-      @scheduler.in expiry_time, :blocking => true do
-        invalidate key
-      end
-    end
   end
 
   # Gets the object that corresponds with the key
@@ -43,6 +47,9 @@ class Cache
   # @return [Object] The object that corresponds with the key
   def get(key)
     check_refresh(key)
+    if(@cache[key]) == nil
+      return nil
+    end
     return @cache[key]
   end
 
