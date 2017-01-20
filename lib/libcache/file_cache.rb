@@ -31,7 +31,7 @@ class FileCache < Cache
       end
       @time_tracker[key] = Time.now
     end
-    @keys[key] = Digest::SHA256.hexdigest(key)
+    @keys[key] = @keys.size.to_s
     @cache[key] = value
     File.open(File.join(store, @keys[key]), 'w') do |f|
       f.write(Marshal.dump(value))
