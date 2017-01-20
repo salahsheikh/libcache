@@ -53,7 +53,7 @@ class FileCache < Cache
   end
 
   # Clears all items in the cache and the cached files in the store directory
-  def invalidateAll
+  def invalidate_all
     super
     Dir.foreach(store) do |f|
       File.delete(File.join(store, f)) if f != '.' && f != '..'

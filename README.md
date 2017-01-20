@@ -42,7 +42,7 @@ cache.exists?(1) # will return true. if there is no set_refresh method provided 
 
 # delete all data on exit of program
 at_exit do
-  cache.invalidateAll
+  cache.invalidate_all
 end
 
 ```
@@ -60,7 +60,7 @@ cache.exists?(1) # will return true. if there is no set_refresh method provided 
 
 # delete all leftover files on exit of program
 at_exit do
-  cache.invalidateAll
+  cache.invalidate_all
 end
 ```
 
