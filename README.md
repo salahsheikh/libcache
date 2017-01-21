@@ -40,6 +40,9 @@ sleep 4 # note that this is more than the expiry time
 cache.get(1) # will return 105 as the data has been refreshed
 cache.exists?(1) # will return true. if there is no set_refresh method provided then it will return false
 
+cache.put("key123", [1,2,true])
+pp cache.get("key123") # prints '[1, 2, true]' preserves type
+
 # delete all data on exit of program
 at_exit do
   cache.invalidate_all
@@ -57,6 +60,8 @@ sleep 4 # note that this is more than the expiry time
 cache.get(1) # will return 105 as the data has been refreshed
 cache.exists?(1) # will return true. if there is no set_refresh method provided then it will return false
 
+cache.put("key123", [1,2,true])
+pp cache.get("key123") # prints '[1, 2, true]' preserves type
 
 # delete all leftover files on exit of program
 at_exit do
