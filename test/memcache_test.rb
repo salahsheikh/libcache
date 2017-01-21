@@ -26,6 +26,13 @@ class MemcacheTest < Minitest::Test
     assert_equal(cache.get(@key), @value)
   end
 
+  def test_cache_returntype
+    cache = CacheBuilder.with(Cache).build
+    testData = [1,2,3]
+    cache.put(@key, testData)
+    assert_equal(cache.get(@key).class, testData.class)
+  end
+
   def test_cache_max
     max = 5
     cache = CacheBuilder.with(Cache).set_max(max).build
@@ -37,11 +44,11 @@ class MemcacheTest < Minitest::Test
   end
 
   def test_cache_expiration
-    expiration_time = "3s"
+    expiration_time = "1s"
     cache = CacheBuilder.with(Cache).set_expiry(expiration_time).build
     cache.put(@key, @value)
     # sleeps for longer than expiration time
-    sleep 4
+    sleep 2
     assert(!cache.exists?(@key))
   end
 
