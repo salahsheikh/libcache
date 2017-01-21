@@ -54,6 +54,15 @@ class FileCacheTest < Minitest::Test
     assert(!cache.exists?(@key))
   end
 
+  # tests for illegal cache names
+  def test_cache_keys
+    cache = CacheBuilder.with(FileCache).set_store(@store).build
+    test_key = "./foo../bar"
+    assert_raises ArgumentError do
+      cache.put(test_key, @value)
+    end
+  end
+
   def teardown
     FileUtils.rm_rf(@store)
   end

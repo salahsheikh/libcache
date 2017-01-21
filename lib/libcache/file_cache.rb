@@ -21,8 +21,8 @@ class FileCache < Cache
   # @param [String] key The key value used to identify an object in the cache
   # @param [Object] value The object to be placed in the cache
   def put(key, value)
-    raise InvalidKey unless key.is_a? String
-    raise InvalidKey unless key =~ /\A[a-zA-Z0-9_-]+\z/
+    raise ArgumentError unless key.is_a? String
+    raise ArgumentError unless key =~ /\A[a-zA-Z0-9_-]+\z/
     @keys[key] = @keys.size.to_s
     File.open(File.join(store, @keys[key]), 'w') do |f|
       f.write(Marshal.dump(value))
