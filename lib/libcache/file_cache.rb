@@ -23,14 +23,17 @@ class FileCache < Cache
   def put(key, value)
     raise InvalidKey unless key.is_a? String
     raise InvalidKey unless key =~ /\A[a-zA-Z0-9_-]+\z/
-    check_expiration(key)
     @keys[key] = @keys.size.to_s
     File.open(File.join(store, @keys[key]), 'w') do |f|
       f.write(Marshal.dump(value))
     end
-    @scheduler.in expiry_time, :blocking => true do
-      invalidate key
+    @cache[key] = value
+    if expiry_time != nil
+      @scheduler.in expiry_time, :blocking => true do
+        invalidate key
+      end
     end
+    check_expiration(key)
   end
 
   # Gets the object that corresponds with the key that is read from the filesystem
