@@ -2,6 +2,8 @@ require_relative 'test_helper'
 
 class MemcacheTest < Minitest::Test
 
+  parallelize_me!
+
   def setup
     @key = "key"
     @value = "value"
