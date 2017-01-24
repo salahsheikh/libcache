@@ -39,6 +39,11 @@ class CacheBuilder
     return self
   end
 
+  def set_post_get(proc)
+    @cache.post_get = proc
+    return self
+  end
+
   # Returns the newly created cache
   def build
     @cache.create_store

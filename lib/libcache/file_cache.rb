@@ -44,6 +44,7 @@ class FileCache < Cache
     if(@keys[key]) == nil
       return nil
     end
+    perform_post_get(key)
     return Marshal.load(File.read(File.join(store, @keys[key])))
   end
 

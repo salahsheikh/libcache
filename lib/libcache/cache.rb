@@ -3,7 +3,7 @@ require 'pp'
 
 class Cache
 
-  attr_accessor :expiry_time, :refresh, :store, :max_size
+  attr_accessor :expiry_time, :refresh, :store, :max_size, :post_get
 
   # Creates a basic Cache with the UTC timezone
   def initialize
@@ -53,6 +53,7 @@ class Cache
     if(@cache[key]) == nil
       return nil
     end
+    perform_post_get(key)
     return @cache[key]
   end
 
@@ -71,6 +72,14 @@ class Cache
       val = refresh.call(key)
       put(key, val)
       return val
+    end
+  end
+
+  # Performs a function after a key has been summoned from the cache
+  # @param [String] key The key value used to identify an object in the cache
+  def perform_post_get(key)
+    unless post_get.nil?
+      post_get.call(key)
     end
   end
 
