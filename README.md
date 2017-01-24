@@ -28,14 +28,15 @@ Or install it yourself as:
     $ gem install libcache
 
 ## Usage
+For an in memory Cache with an expiry time of 3 seconds, a max size of 500, and refresh method where 100 is added to the key (of course more sophisticated value retrieving operations will replace this method), and a function set_post_get which defines a function to be executed after the retrieval of a key. The These additions are optional and configurable. The simplest form of an in-memory cache is 'CacheBuilder.with(Cache).build'
 ```ruby
-# For an in memory Cache with an expiry time of 3 seconds, a max size of 500, and refresh method where 100 is added to the key (of course more sophisticated value retrieving operations will replace this method), and a function set_post_get which defines a function to be executed after the retrieval of a key. The These additions are optional and configurable. The simplest form of an in-memory cache is 'CacheBuilder.with(Cache).build'
 cache = CacheBuilder.with(Cache).set_expiry('3s').set_max(500).set_refresh(lambda { |key| key + 100 }).set_post_get(lambda { |*key| puts "Retrieved #{key}!" }).build
-# or
-# For an file-based Cache with an expiry time of 3 seconds, store location at 'foo\bar', and refresh method where 100 is added to the key, and a function set_post_get which defines a function to be executed after the retrieval of a key. Of course these additions are optional and configurable. The only thing that is non-removable is the ```set_store``` method. The simplest form of a File cache is 'CacheBuilder.with(FileCache).set_store('foo\bar').build'
+```
+...or for an file-based Cache with an expiry time of 3 seconds, store location at 'foo\bar', and refresh method where 100 is added to the key, and a function set_post_get which defines a function to be executed after the retrieval of a key. Of course these additions are optional and configurable. The only thing that is non-removable is the ```set_store``` method. The simplest form of a File cache is 'CacheBuilder.with(FileCache).set_store('foo\bar').build'
+```ruby
 cache = CacheBuilder.with(FileCache).set_store('foo\bar').set_expiry('3s').set_max(500).set_refresh(lambda { |key| key + 100 }).set_post_get(lambda { |*key| puts "Retrieved #{key}!" }).build
-
-
+```
+```ruby
 cache.put(1, 5)
 cache.get(1) # will return 5, also prints "Retrieved [1]!" to the console, as per the function defined in the set_post_get method
 sleep 4 # note that this is more than the expiry time
