@@ -28,48 +28,31 @@ Or install it yourself as:
     $ gem install libcache
 
 ## Usage
-
-For an in memory Cache with an expiry time of 3 seconds, store location at 'foo\bar', a max size of 500, and refresh method where 100 is added to the key (of course more sophisticated value retrieving operations will replace this method). Of course these additions are optional and configurable. The simplest form of an in-memory cache is ```CacheBuilder.with(Cache).build```
 ```ruby
+# For an in memory Cache with an expiry time of 3 seconds, a max size of 500, and refresh method where 100 is added to the key (of course more sophisticated value retrieving operations will replace this method), and a function set_post_get which defines a function to be executed after the retrieval of a key. The These additions are optional and configurable. The simplest form of an in-memory cache is 'CacheBuilder.with(Cache).build'
+cache = CacheBuilder.with(Cache).set_expiry('3s').set_max(500).set_refresh(lambda { |key| key + 100 }).set_post_get(lambda { |*key| puts "Retrieved #{key}!" }).build
+# or
+# For an file-based Cache with an expiry time of 3 seconds, store location at 'foo\bar', and refresh method where 100 is added to the key, and a function set_post_get which defines a function to be executed after the retrieval of a key. Of course these additions are optional and configurable. The only thing that is non-removable is the ```set_store``` method. The simplest form of a File cache is 'CacheBuilder.with(FileCache).set_store('foo\bar').build'
+cache = CacheBuilder.with(FileCache).set_store('foo\bar').set_expiry('3s').set_max(500).set_refresh(lambda { |key| key + 100 }).set_post_get(lambda { |*key| puts "Retrieved #{key}!" }).build
 
-cache = CacheBuilder.with(Cache).set_expiry('3s').set_max(500).set_refresh(Proc.new { |key| key + 100 }).build
 
 cache.put(1, 5)
-cache.get(1) # will return 5
+cache.get(1) # will return 5, also prints "Retrieved [1]!" to the console, as per the function defined in the set_post_get method
 sleep 4 # note that this is more than the expiry time
-cache.get(1) # will return 105 as the data has been refreshed
+cache.get(1) # will return 105 as the data has been refreshed, also prints "Retrieved [1]!" 
 cache.exists?(1) # will return true. if there is no set_refresh method provided then it will return false
 
 cache.put("key123", [1,2,true])
-pp cache.get("key123") # prints '[1, 2, true]' preserves type
+pp cache.get("key123") # prints '[1, 2, true]' preserves type, prints "Retrieved ["key123"]!"
 
 # delete all data on exit of program
+# if the file cache was used, deletes all left over files. #cache.invalidate_all can be called at any point in runtime.
 at_exit do
   cache.invalidate_all
 end
 
 ```
-
-For an file-based Cache with an expiry time of 3 seconds, store location at 'foo\bar', and refresh method where 100 is added to the key (of course more sophisticated value retrieving operations will replace this method). Of course these additions are optional and configurable. The only thing that is non-removable is the ```set_store``` method. 
-```ruby
-cache = CacheBuilder.with(FileCache).set_store('foo\bar').set_expiry('3s').set_max(500).set_refresh(Proc.new { |key| key + 100 }).build
-
-cache.put(1, 5)
-cache.get(1) # will return 5
-sleep 4 # note that this is more than the expiry time
-cache.get(1) # will return 105 as the data has been refreshed
-cache.exists?(1) # will return true. if there is no set_refresh method provided then it will return false
-
-cache.put("key123", [1,2,true])
-pp cache.get("key123") # prints '[1, 2, true]' preserves type
-
-# delete all leftover files on exit of program
-at_exit do
-  cache.invalidate_all
-end
-```
-
-For more on what kind of strings are understood as times, [click here](https://github.com/jmettraux/rufus-scheduler/blob/two/README.rdoc#the-time-strings-understood-by-rufus-scheduler).
+For more on what kind of strings are understood as times, like "3s", [click here](https://github.com/jmettraux/rufus-scheduler/blob/two/README.rdoc#the-time-strings-understood-by-rufus-scheduler).
 
 ## Development
 
