@@ -63,6 +63,14 @@ class FileCacheTest < Minitest::Test
     end
   end
 
+  def test_cache_post_get
+    val = 0
+    cache = CacheBuilder.with(FileCache).set_store(@store).set_post_get(lambda { |*key| val = 1}).build
+    cache.put(@key, @value)
+    cache.get(@key)
+    assert_equal(1, val)
+  end
+
   def teardown
     FileUtils.rm_rf(@store)
   end

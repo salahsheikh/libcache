@@ -54,4 +54,12 @@ class MemcacheTest < Minitest::Test
     assert(!cache.exists?(@key))
   end
 
+  def test_cache_post_get
+    val = 0
+    cache = CacheBuilder.with(Cache).set_post_get(lambda { |*key| val = 1}).build
+    cache.put(@key, @value)
+    cache.get(@key)
+    assert_equal(1, val)
+  end
+
 end
