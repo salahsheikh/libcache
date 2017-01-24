@@ -1,6 +1,8 @@
 # Libcache [![Build Status](https://travis-ci.org/silk8192/libcache.svg?branch=master)](https://travis-ci.org/silk8192/libcache) [![Gem Version](https://badge.fury.io/rb/libcache.svg)](https://badge.fury.io/rb/libcache)
 
-A simple caching library that provides flexible and powerful caching features such as in-memory and file based caching similar to Guava's Caching system. [Docs.](http://www.rubydoc.info/gems/libcache)
+A simple caching library that provides flexible and powerful caching features such as in-memory and file based caching similar to Guava's Caching system. 
+
+## [Documentation](http://www.rubydoc.info/gems/libcache)
 
 ## Features
 
@@ -10,29 +12,12 @@ A simple caching library that provides flexible and powerful caching features su
 * Allows for expiration behavior based on the time since an object was placed in the cache or when it was last accessed/updated
 * Allows custom refresh functions for reloading expensive data once it has been discarded 
 
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'libcache'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install libcache
-
 ## Usage
-For an in memory Cache with an expiry time of 3 seconds, a max size of 500, and refresh method where 100 is added to the key (of course more sophisticated value retrieving operations will replace this method), and a function set_post_get which defines a function to be executed after the retrieval of a key. The These additions are optional and configurable. The simplest form of an in-memory cache is 'CacheBuilder.with(Cache).build'
+For an in memory Cache with an expiry time of 3 seconds, a max size of 500, and refresh method where 100 is added to the key (of course more sophisticated value retrieving operations will replace this method), and a function set_post_get which defines a function to be executed after the retrieval of a key. These additions are optional and configurable. The simplest form of an in-memory cache is ```CacheBuilder.with(Cache).build```
 ```ruby
 cache = CacheBuilder.with(Cache).set_expiry('3s').set_max(500).set_refresh(lambda { |key| key + 100 }).set_post_get(lambda { |*key| puts "Retrieved #{key}!" }).build
 ```
-...or for an file-based Cache with an expiry time of 3 seconds, store location at 'foo\bar', and refresh method where 100 is added to the key, and a function set_post_get which defines a function to be executed after the retrieval of a key. Of course these additions are optional and configurable. The only thing that is non-removable is the ```set_store``` method. The simplest form of a File cache is 'CacheBuilder.with(FileCache).set_store('foo\bar').build'
+...or for an file-based Cache with an expiry time of 3 seconds, store location at 'foo\bar', and refresh method where 100 is added to the key, and a function set_post_get which defines a function to be executed after the retrieval of a key. Of course these additions are optional and configurable. The only thing that is non-removable is the ```set_store``` method. The simplest form of a File cache is ```CacheBuilder.with(FileCache).set_store('foo\bar').build```
 ```ruby
 cache = CacheBuilder.with(FileCache).set_store('foo\bar').set_expiry('3s').set_max(500).set_refresh(lambda { |key| key + 100 }).set_post_get(lambda { |*key| puts "Retrieved #{key}!" }).build
 ```
@@ -54,6 +39,23 @@ end
 
 ```
 For more on what kind of strings are understood as times, like "3s", [click here](https://github.com/jmettraux/rufus-scheduler/blob/two/README.rdoc#the-time-strings-understood-by-rufus-scheduler).
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'libcache'
+```
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install libcache
+
 
 ## Development
 
